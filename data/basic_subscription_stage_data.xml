@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="basic_subscription_stage_draft" model="basic.subscription.stage">
+        <field name="name">Draft</field>
+        <field name="sequence">10</field>
+        <field name="in_progress" eval="False"/>
+    </record>
+
+    <record id="basic_subscription_stage_in_progress" model="basic.subscription.stage">
+        <field name="name">In Progress</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="basic_subscription_stage_renew" model="basic.subscription.stage">
+        <field name="name">To Renew</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="basic_subscription_stage_closed" model="basic.subscription.stage">
+        <field name="name">Closed</field>
+        <field name="sequence">40</field>
+        <field name="in_progress" eval="False"/>
+        <field name="fold">True</field>
+    </record>
+
+</odoo>

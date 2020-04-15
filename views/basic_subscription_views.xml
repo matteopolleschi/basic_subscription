@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <!-- subscription form -->
+        <record model="ir.ui.view" id="subscription_form_view">
+            <field name="name">subscription.form</field>
+            <field name="model">basic.subscription</field>
+            <field name="arch" type="xml">
+                <form string="Subscription" class="o_subscription_form">
+                    <header>
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet string="Subscription">
+                        <div class="badge-pill badge-warning float-right" attrs="{'invisible': [('to_renew', '=', False)]}">To Renew</div>
+                        <div class="oe_title">
+                            <h1 class="flex-fill d-flex flex-row" attrs="{'invisible': [('id', '=', False)]}">
+                                <!--field name="starred" widget="boolean_favorite" class="mr-3" nolabel="1"/-->
+                                <field name="display_name" class="text-truncate"/>
+                            </h1>
+                            <h1 attrs="{'invisible': [('id', '!=', False)]}">
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group name="main">
+                            <group>
+                                <field name="partner_id" required="1"/>
+                                <field name="pricelist_id"/>
+                                <field name="code"/>
+                                <field name="date_start"/>
+                                <field name="date_end" />
+                                <!--field name="close_reason_id" attrs="{'invisible': [('in_progress', '=', True)]}"/-->
+                                <field name="in_progress" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="template_id"/>
+                                <field name="user_id"/>
+                                <field name="team_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="currency_id" invisible="1"/>
+                                <!--label for="recurring_next_date" string="Date of Next Invoice" attrs="{'invisible': [('in_progress', '=', False)]}"/>
+                                <div attrs="{'invisible': [('in_progress', '=', False)]}">
+                                    <field name="recurring_next_date"/>
+                                    <button string="&#8658; Generate Invoice" class="oe_link" name="recurring_invoice"
+                                            type="object" attrs="{'invisible': [('payment_mode', '=', 'manual')]}" groups="base.group_no_one"/>
+                                </div-->
+                                <field name="recurring_rule_boundary" invisible="1"/>
+                                <field name="to_renew"/>
+                            </group>
+                        </group>
+                        <div>
+                            <notebook>
+                                <page string="Subscription Lines" id="lines">
+                                    <div>
+                                        <field name="recurring_invoice_line_ids">
+                                            <tree editable="bottom">
+                                                <field name="product_id"/>
+                                                <field name="name"/>
+                                                <field name="quantity"/>
+                                                <field name="uom_id"/>
+                                                <field name="price_unit"/>
+                                                <field name="discount"/>
+                                                <field name="price_subtotal"/>
+                                            </tree>
+                                        </field>
+                                        <group class="oe_subtotal_footer oe_right">
+                                            <field name="recurring_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" modifiers="{'readonly': true}"/>
+                                        </group>
+                                    </div>
+                                </page>
+                                <page string="Settings" id="settings">
+                                    <group>
+                                        <field name="website_url" widget="url"/>
+                                        <field name="token"/>
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        <!--field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        <field name="payment_mode" invisible="1"/>
+                                        <field name="analytic_account_id"/>
+                                        <field name="payment_token_id" attrs="{'invisible': [('payment_mode', 'in', ['manual', 'draft_invoice'])]}" options="{'no_create_edit': True}"/-->
+                                    </group>
+                                </page>
+                            </notebook>
+                        </div>
+                        <div name="description">
+                            <field name="description" placeholder="Terms and Conditions"/>
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- subscription search -->
+        <record model="ir.ui.view" id="subscription_search_view">
+            <field name="name">subscription.search</field>
+            <field name="model">basic.subscription</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <filter name="my_subscriptions" string="My Subscriptions" domain="[('user_id','=',uid)]"/>
+                    <group string="Group By">
+                        <filter string="Stage" name="stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- subscription tree -->
+        <record model="ir.ui.view" id="subscription_tree_view">
+            <field name="name">subscription.tree</field>
+            <field name="model">basic.subscription</field>
+            <field name="arch" type="xml">
+                <tree string="Subscription Tree">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- subscription calendar -->
+        <record model="ir.ui.view" id="subscription_calendar_view">
+            <field name="name">subscription.calendar</field>
+            <field name="model">basic.subscription</field>
+            <field name="arch" type="xml">
+                <calendar string="Subscription Calendar" date_start="date_start" date_stop="date_end" color="partner_id">
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- subscription graph -->
+        <record model="ir.ui.view" id="subscription_graph_view">
+            <field name="name">subscription.graph</field>
+            <field name="model">basic.subscription</field>
+            <field name="arch" type="xml">
+                <graph string="Subscriptions by services">
+                    <field name="name"/>
+                    <field name="recurring_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- subscription kanban -->
+        <record model="ir.ui.view" id="subscription_kanban_view">
+            <field name="name">subscription.kanban</field>
+            <field name="model">basic.subscription</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id" class="o_kanban_mobile">
+                    <field name="user_id"/>
+                    <field name="stage_id"/>
+                    <!--field name="starred"/-->
+                    <field name="recurring_total"/>
+                    <field name="template_id"/>
+                    <field name="currency_id"/>
+                    <field name="activity_state" />
+                    <field name="activity_ids" />
+                    <field name="to_renew"/>
+                    <field name="color"/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' help="This bar allows to filter the opportunities based on scheduled activities."/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <div>
+                                        <strong>
+                                            <div class="float-right">
+                                                <field name="recurring_total" />
+                                            </div>
+                                            <field name="partner_id"/>
+                                        </strong>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div t-if="record.to_renew.raw_value" class="badge badge-warning border-0 float-right mt4">
+                                            To Renew
+                                        </div>
+                                        <field name="code"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <!--field name="starred" widget="boolean_favorite" nolabel="1" force_save="1"/-->
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+
+        <!-- window action -->
+        <record model="ir.actions.act_window" id="subscription_list_action">
+            <field name="name">Subscriptions</field>
+            <field name="res_model">basic.subscription</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="context">{
+                "group_by": "stage_id",
+                "search_default_my_subscriptions":1
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create the first subscription
+                </p>
+            </field>
+        </record>
+
+        <!-- subscription stage -->
+        <record id="basic_subscription_stage_action" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">basic.subscription.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new subscription stage
+                </p>
+            </field>
+        </record>
+
+        <record id="basic_subscription_stage_view_form" model="ir.ui.view">
+            <field name="name">basic.subscription.stage.form</field>
+            <field name="model">basic.subscription.stage</field>
+            <field name="arch" type="xml">
+                <form string="Subscription Stage">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                                <field name="rating_template_id"/>
+                            </group>
+                            <group>
+                                <field name="fold"/>
+                                <field name="in_progress"/>
+                            </group>
+                        </group>
+                        <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- subscription template -->
+        <record id="basic_subscription_template_action" model="ir.actions.act_window">
+            <field name="name">Templates</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">basic.subscription.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new subscription template
+                </p>
+            </field>
+        </record>
+
+        <record id="basic_subscription_template_view_form" model="ir.ui.view">
+            <field name="name">basic.subscription.template.form</field>
+            <field name="model">basic.subscription.template</field>
+            <field name="arch" type="xml">
+                <form string="Subscription">
+                    <sheet string="Subscription">
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="e.g. Monthly Subscription" class="oe_edit_only"/>
+                            </h1>
+                        </div>
+                        <group name="config">
+                            <group name="invoicing">
+                                <label for="recurring_interval" string="Invoice period"/>
+                                <div class="o_row">
+                                    <span class="mr-1">Every</span>
+                                    <field name="recurring_interval" required="1"/>
+                                    <field name="recurring_rule_type" class="field_rule_type" required="1"/>
+                                </div>
+                                <field name="recurring_rule_boundary" widget="radio" options="{'horizontal':true}"/>
+                                <label for="" attrs="{'invisible': [('recurring_rule_boundary','=','unlimited')]}"/>
+                                <div class="o_row" attrs="{'invisible': [('recurring_rule_boundary','=','unlimited')]}">
+                                    <span class="mr-1">For</span>
+                                    <field name="recurring_rule_count"/>
+                                    <field name="recurring_rule_type_readonly" invisible="1"/>
+                                    <span class="mr-1">period(s)</span>
+                                </div>
+                                <field name="payment_mode" widget="radio"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="description" string="Terms and Conditions">
+                                <field name="description" placeholder="Terms and Conditions"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- subscription tag -->
+        <record id="basic_subscription_tag_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">basic.subscription.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <record id="basic_subscription_tag_view_form" model="ir.ui.view">
+            <field name="name">basic.subscription.tag.form</field>
+            <field name="model">basic.subscription.tag</field>
+            <field name="arch" type="xml">
+                <form string="Subscription Tag">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="color"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- menu item -->
+        <menuitem id="main_basic_subscription_menu" name="Basic Subscription"/>
+        <menuitem id="basic_subscription_menu" name="Basic Subscription" parent="main_basic_subscription_menu"/>
+        <menuitem id="subscriptions_menu" name="Subscriptions" parent="basic_subscription_menu" action="subscription_list_action"/>
+        <menuitem id="configuration_menu" name="Configuration" parent="main_basic_subscription_menu"/>
+        <menuitem id="basic_subscription_stage_menu" name="Subscription Stages" parent="configuration_menu" action="basic_subscription_stage_action"/>
+        <menuitem id="basic_subscription_template_menu" name="Subscription Templates" parent="configuration_menu" action="basic_subscription_template_action"/>
+        <menuitem id="basic_subscription_tag_menu" name="Subscription Tags" parent="configuration_menu" action="basic_subscription_tag_action"/>
+
+</odoo>

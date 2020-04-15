@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+    
+        <record id="subscription_1" model="basic.subscription">
+            <field name="name"> Subscription 1 </field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=9))"/>
+            <field name="stage_id" ref="basic_subscription.basic_subscription_stage_in_progress"/>
+            <field name="description">Demo description 1</field>
+        </record>
+
+        <record id="subscription_2" model="basic.subscription">
+            <field name="name"> Subscription 2 </field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=9))"/>
+            <field name="stage_id" ref="basic_subscription.basic_subscription_stage_draft"/>
+            <field name="description">Demo description 2</field>
+        </record>
+
+        <record id="subscription_3" model="basic.subscription">
+            <field name="name"> Subscription 3 </field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=9))"/>
+            <field name="stage_id" ref="basic_subscription.basic_subscription_stage_renew"/>
+            <field name="description">Demo description 3</field>
+        </record>
+
+        <record id="subscription_4" model="basic.subscription">
+            <field name="name"> Subscription 4 </field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date_start" eval="(DateTime.now() - timedelta(days=9))"/>
+            <field name="stage_id" ref="basic_subscription.basic_subscription_stage_closed"/>
+            <field name="description">Demo description 4</field>
+        </record>
+
+    </data>
+</odoo>
