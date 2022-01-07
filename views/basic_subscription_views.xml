@@ -198,7 +198,6 @@
         <record model="ir.actions.act_window" id="subscription_list_action">
             <field name="name">Subscriptions</field>
             <field name="res_model">basic.subscription</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{
                 "group_by": "stage_id",
@@ -216,7 +215,6 @@
             <field name="name">Stages</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">basic.subscription.stage</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -253,7 +251,6 @@
             <field name="name">Templates</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">basic.subscription.template</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -287,7 +284,7 @@
                                     <field name="recurring_rule_type" class="field_rule_type" required="1"/>
                                 </div>
                                 <field name="recurring_rule_boundary" widget="radio" options="{'horizontal':true}"/>
-                                <label for="" attrs="{'invisible': [('recurring_rule_boundary','=','unlimited')]}"/>
+                                <label for="recurring_rule_count" attrs="{'invisible': [('recurring_rule_boundary','=','unlimited')]}"/>
                                 <div class="o_row" attrs="{'invisible': [('recurring_rule_boundary','=','unlimited')]}">
                                     <span class="mr-1">For</span>
                                     <field name="recurring_rule_count"/>
@@ -316,7 +313,6 @@
             <field name="name">Tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">basic.subscription.tag</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
